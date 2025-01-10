@@ -14,7 +14,7 @@ class MeditationViewModel: ObservableObject {
     @Published var currentPhase: BreathPhase = .inhale
     @Published var progress: Double = 0
     @Published var selectedSound: SoundOption?
-    @Published var duration: Int = 15  // 默认15分钟
+    @Published var settings: MeditationSettings = MeditationSettings()
     
     // Timer related
     private var breathTimer: Timer?
@@ -30,7 +30,6 @@ class MeditationViewModel: ObservableObject {
     }
     
     func startBreathing() {
-        print("startBreathing called")  // Log to verify method call
         isBreathing = true
         startBreathCycle()
     }
@@ -49,7 +48,6 @@ class MeditationViewModel: ObservableObject {
     }
     
     private func startBreathCycle() {
-        print("startBreathCycle called")  // Log cycle start
         currentPhase = .inhale
         updatePhaseTimer()
         
@@ -71,8 +69,6 @@ class MeditationViewModel: ObservableObject {
             duration = TimeInterval(currentPattern.exhale)
         }
         
-        print("updatePhaseTimer: setting timer for \(duration) seconds in phase \(currentPhase)")  // Log timer setup
-        
         phaseTimer?.invalidate()
         phaseTimer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { [weak self] _ in
             self?.moveToNextPhase()
@@ -80,8 +76,6 @@ class MeditationViewModel: ObservableObject {
     }
     
     private func moveToNextPhase() {
-        print("moveToNextPhase called: current phase = \(currentPhase)")  // Log phase transition
-        
         switch currentPhase {
         case .inhale:
             currentPhase = .hold
@@ -90,8 +84,6 @@ class MeditationViewModel: ObservableObject {
         case .exhale:
             currentPhase = .inhale
         }
-        
-        print("moveToNextPhase: new phase = \(currentPhase)")  // Log new phase
         
         if isBreathing {
             updatePhaseTimer()
@@ -105,14 +97,15 @@ class MeditationViewModel: ObservableObject {
         
         if progress >= 1.0 {
             progress = 0.0
-            print("Progress reset to 0")  // Log progress reset
         }
     }
     
-    func updateBreathingSettings(duration: Int, pattern: BreathPattern) {
-        print("Updating breathing settings: duration=\(duration), pattern=\(pattern.inhale)-\(pattern.hold)-\(pattern.exhale)")
-        self.duration = duration
-        self.currentMode.customBreathPattern = pattern
+    func updateSettings(_ newSettings: MeditationSettings) {
+        settings = newSettings
+        if isBreathing {
+            pauseBreathing()
+            startBreathing()
+        }
     }
     
     deinit {

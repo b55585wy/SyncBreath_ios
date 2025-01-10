@@ -34,7 +34,6 @@ struct BreathingAnimationView: View {
         ZStack {
             // Background gradient based on meditation type
             backgroundGradient
-                .transition(.opacity)
                 .animation(.easeInOut(duration: 1.0), value: meditationType)
                 .ignoresSafeArea()
             
@@ -54,14 +53,8 @@ struct BreathingAnimationView: View {
             }
             .animation(.easeInOut(duration: 0.5), value: isTransitioning)
         }
-        .onChange(of: meditationType) { newType, _ in
+        .onChange(of: meditationType) { newType in
             handleTypeChange(newType)
-        }
-        .onChange(of: phase) { _, newPhase in
-            print("Phase changed to: \(newPhase)")
-        }
-        .onChange(of: progress) { _, newProgress in
-            print("Progress updated to: \(newProgress)")
         }
     }
     

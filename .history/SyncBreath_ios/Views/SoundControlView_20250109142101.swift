@@ -2,8 +2,8 @@ import SwiftUI
 
 struct SoundControlView: View {
     @ObservedObject var audioManager = AudioManager.shared
-    @ObservedObject var viewModel: MeditationViewModel
     let meditationType: MeditationType
+    @State private var selectedSound: SoundOption?
     @State private var showSoundPicker = false
     
     private var soundOptions: [SoundOption] {
@@ -31,44 +31,36 @@ struct SoundControlView: View {
             }) {
                 HStack {
                     Image(systemName: "music.note")
-                        .font(.system(size: 20))
-                    Text(viewModel.selectedSound?.name ?? "选择音效")
-                        .font(.body)
+                    Text(selectedSound?.name ?? "选择音效")
                     Spacer()
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 16))
                 }
                 .foregroundColor(.white)
                 .padding()
-                .frame(height: 44)
                 .background(Color.white.opacity(0.2))
                 .cornerRadius(10)
             }
             
-            if viewModel.selectedSound != nil {
+            if selectedSound != nil {
                 // Volume control
                 HStack {
                     Image(systemName: "speaker.fill")
-                        .font(.system(size: 20))
-                        .frame(width: 44, height: 44)
                         .foregroundColor(.white)
                     Slider(value: $audioManager.volume, in: 0...1) { _ in
                         audioManager.updateVolume()
                     }
                     Image(systemName: "speaker.wave.3.fill")
-                        .font(.system(size: 20))
-                        .frame(width: 44, height: 44)
                         .foregroundColor(.white)
                 }
                 .padding()
             }
         }
         .sheet(isPresented: $showSoundPicker) {
-            SoundPickerView(selectedSound: $viewModel.selectedSound,
+            SoundPickerView(selectedSound: $selectedSound,
                           soundOptions: soundOptions,
                           meditationType: meditationType)
         }
-        .onChange(of: viewModel.selectedSound) { oldValue, newSound in
+        .onChange(of: selectedSound) { oldValue, newSound in
             if let sound = newSound {
                 if audioManager.isPlaying {
                     audioManager.crossFade(to: sound)
@@ -117,6 +109,6 @@ struct SoundPickerView: View {
 }
 
 #Preview {
-    SoundControlView(viewModel: MeditationViewModel(), meditationType: .bambooGrove)
+    SoundControlView(meditationType: .bambooGrove)
         .preferredColorScheme(.dark)
 }

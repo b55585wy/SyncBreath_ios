@@ -39,7 +39,7 @@ struct PagedBreathingView: View {
                             // Controls
                             VStack(spacing: 20) {
                                 // Sound control
-                                SoundControlView(viewModel: viewModel, meditationType: modes[index])
+                                SoundControlView(meditationType: modes[index])
                                     .padding(.horizontal)
                                 
                                 // Start/Pause Button

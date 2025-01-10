@@ -31,16 +31,12 @@ struct SoundControlView: View {
             }) {
                 HStack {
                     Image(systemName: "music.note")
-                        .font(.system(size: 20))
                     Text(viewModel.selectedSound?.name ?? "选择音效")
-                        .font(.body)
                     Spacer()
                     Image(systemName: "chevron.right")
-                        .font(.system(size: 16))
                 }
                 .foregroundColor(.white)
                 .padding()
-                .frame(height: 44)
                 .background(Color.white.opacity(0.2))
                 .cornerRadius(10)
             }
@@ -49,15 +45,11 @@ struct SoundControlView: View {
                 // Volume control
                 HStack {
                     Image(systemName: "speaker.fill")
-                        .font(.system(size: 20))
-                        .frame(width: 44, height: 44)
                         .foregroundColor(.white)
                     Slider(value: $audioManager.volume, in: 0...1) { _ in
                         audioManager.updateVolume()
                     }
                     Image(systemName: "speaker.wave.3.fill")
-                        .font(.system(size: 20))
-                        .frame(width: 44, height: 44)
                         .foregroundColor(.white)
                 }
                 .padding()

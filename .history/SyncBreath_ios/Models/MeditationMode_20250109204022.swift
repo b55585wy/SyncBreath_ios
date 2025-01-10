@@ -85,6 +85,7 @@ struct MeditationMode: Identifiable {
     
     init(type: MeditationType) {
         self.type = type
+        self.breathPattern = type.defaultBreathPattern
     }
 }
 

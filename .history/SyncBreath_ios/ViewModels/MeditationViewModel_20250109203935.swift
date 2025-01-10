@@ -110,9 +110,9 @@ class MeditationViewModel: ObservableObject {
     }
     
     func updateBreathingSettings(duration: Int, pattern: BreathPattern) {
-        print("Updating breathing settings: duration=\(duration), pattern=\(pattern.inhale)-\(pattern.hold)-\(pattern.exhale)")
+        print("Updating breathing settings: duration=\(duration), pattern=\(pattern.description)")
         self.duration = duration
-        self.currentMode.customBreathPattern = pattern
+        self.currentMode.breathPattern = pattern
     }
     
     deinit {

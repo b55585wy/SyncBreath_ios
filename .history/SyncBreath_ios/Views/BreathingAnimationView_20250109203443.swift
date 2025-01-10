@@ -32,6 +32,7 @@ struct BreathingAnimationView: View {
     
     var body: some View {
         ZStack {
+            print("UI updated: phase = \(phase), progress = \(progress)")  // Log to verify UI updates
             // Background gradient based on meditation type
             backgroundGradient
                 .transition(.opacity)
@@ -54,14 +55,8 @@ struct BreathingAnimationView: View {
             }
             .animation(.easeInOut(duration: 0.5), value: isTransitioning)
         }
-        .onChange(of: meditationType) { newType, _ in
+        .onChange(of: meditationType) { newType in
             handleTypeChange(newType)
-        }
-        .onChange(of: phase) { _, newPhase in
-            print("Phase changed to: \(newPhase)")
-        }
-        .onChange(of: progress) { _, newProgress in
-            print("Progress updated to: \(newProgress)")
         }
     }
     

@@ -5,9 +5,6 @@ struct BreathingAnimationView: View {
     @Binding var phase: MeditationViewModel.BreathPhase
     @Binding var progress: Double
     
-    @State private var previousType: MeditationType? = nil
-    @State private var isTransitioning = false
-    
     private var scale: CGFloat {
         switch phase {
         case .inhale:
@@ -34,64 +31,35 @@ struct BreathingAnimationView: View {
         ZStack {
             // Background gradient based on meditation type
             backgroundGradient
-                .transition(.opacity)
-                .animation(.easeInOut(duration: 1.0), value: meditationType)
                 .ignoresSafeArea()
             
             // Main breathing animation
-            ZStack {
-                // Current animation
-                createAnimationView(for: meditationType)
-                    .opacity(isTransitioning ? 0 : 1)
-                    .offset(x: isTransitioning ? -UIScreen.main.bounds.width : 0)
-                
-                // Previous animation (if exists)
-                if let previousType = previousType {
-                    createAnimationView(for: previousType)
-                        .opacity(isTransitioning ? 1 : 0)
-                        .offset(x: isTransitioning ? 0 : UIScreen.main.bounds.width)
+            Group {
+                switch meditationType {
+                case .bambooGrove:
+                    BambooAnimation(scale: scale, opacity: opacity)
+                case .cloudReturn:
+                    CloudAnimation(scale: scale, opacity: opacity)
+                case .starryNight:
+                    StarryAnimation(scale: scale, opacity: opacity)
+                case .mountainSpring:
+                    MountainSpringAnimation(scale: scale, opacity: opacity)
+                case .zenMoment:
+                    ZenCircleAnimation(scale: scale, opacity: opacity)
+                case .seasonCycle:
+                    SeasonalAnimation(scale: scale, opacity: opacity)
                 }
             }
-            .animation(.easeInOut(duration: 0.5), value: isTransitioning)
-        }
-        .onChange(of: meditationType) { newType, _ in
-            handleTypeChange(newType)
-        }
-        .onChange(of: phase) { _, newPhase in
-            print("Phase changed to: \(newPhase)")
-        }
-        .onChange(of: progress) { _, newProgress in
-            print("Progress updated to: \(newProgress)")
-        }
-    }
-    
-    private func createAnimationView(for type: MeditationType) -> some View {
-        Group {
-            switch type {
-            case .bambooGrove:
-                BambooAnimation(scale: scale, opacity: opacity)
-            case .cloudReturn:
-                CloudAnimation(scale: scale, opacity: opacity)
-            case .starryNight:
-                StarryAnimation(scale: scale, opacity: opacity)
-            case .mountainSpring:
-                MountainSpringAnimation(scale: scale, opacity: opacity)
-            case .zenMoment:
-                ZenCircleAnimation(scale: scale, opacity: opacity)
-            case .seasonCycle:
-                SeasonalAnimation(scale: scale, opacity: opacity)
-            }
-        }
-    }
-    
-    private func handleTypeChange(_ newType: MeditationType) {
-        previousType = meditationType
-        isTransitioning = true
-        
-        // Delay and reset state
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            isTransitioning = false
-            previousType = nil
+            .animation(.easeInOut(duration: 0.5), value: scale)
+            
+            // Phase indicator
+            // VStack {
+            //     Spacer()
+            //     Text(phase.rawValue)
+            //         .font(.title)
+            //         .foregroundColor(.white)
+            //         .padding(.bottom, 50)
+            // }
         }
     }
     

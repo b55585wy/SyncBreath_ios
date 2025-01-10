@@ -14,7 +14,6 @@ class MeditationViewModel: ObservableObject {
     @Published var currentPhase: BreathPhase = .inhale
     @Published var progress: Double = 0
     @Published var selectedSound: SoundOption?
-    @Published var duration: Int = 15  // 默认15分钟
     
     // Timer related
     private var breathTimer: Timer?
@@ -107,12 +106,6 @@ class MeditationViewModel: ObservableObject {
             progress = 0.0
             print("Progress reset to 0")  // Log progress reset
         }
-    }
-    
-    func updateBreathingSettings(duration: Int, pattern: BreathPattern) {
-        print("Updating breathing settings: duration=\(duration), pattern=\(pattern.inhale)-\(pattern.hold)-\(pattern.exhale)")
-        self.duration = duration
-        self.currentMode.customBreathPattern = pattern
     }
     
     deinit {

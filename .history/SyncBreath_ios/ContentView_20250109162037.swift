@@ -39,7 +39,7 @@ struct ContentView: View {
                 // Controls
                 VStack(spacing: 20) {
                     // Sound control
-                    SoundControlView(viewModel: viewModel, meditationType: viewModel.currentMode.type)
+                    SoundControlView(meditationType: viewModel.currentMode.type)
                         .padding(.horizontal)
                     
                     // Start/Pause Button
