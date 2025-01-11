@@ -54,9 +54,7 @@ struct SettingsView: View {
             }
             .navigationTitle("设置")
         }
-        .sheet(isPresented: $showBluetoothView) {
-            BluetoothDeviceView()
-        }
+        
     }
 }
 
